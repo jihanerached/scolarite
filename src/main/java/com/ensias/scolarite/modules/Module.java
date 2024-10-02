@@ -10,8 +10,6 @@ import jakarta.persistence.Id;
 public class Module {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    // GeneratedValue indique à JPA d'adopter une stratégie de génération de la clé primaire.
     // Les stratégies possibles sont AUTO, IDENTITY, SEQUENCE et TABLE. Pour Derby, la stratégie AUTO est recommandée.
     private int id;
 
