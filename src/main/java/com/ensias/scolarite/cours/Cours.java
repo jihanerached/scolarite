@@ -1,5 +1,6 @@
 package com.ensias.scolarite.cours;
 
+import com.ensias.scolarite.modules.Module;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
@@ -59,4 +60,6 @@ public class Cours {
     public void setModule(Module module) {
         this.module = module;
     }
+
+
 }

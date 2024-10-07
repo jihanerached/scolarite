@@ -4,54 +4,45 @@ import java.util.List;
 import java.util.Optional;
 import com.ensias.scolarite.modules.Module;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-@RestController // Indicating that this is a REST controller
+@RestController
 public class CoursController {
 
-    @Autowired // Injecting the CoursService class
+    @Autowired
     private CoursService coursService;
 
-    @Autowired // Injecting the ModuleService class to fetch modules
-    private ModuleService moduleService;
-
-    // Retrieve all courses for a given module
-    @RequestMapping("/modules/{id}/cours")
-    public List<Cours> getAllCours(@PathVariable Integer id){
-        return coursService.getAllCours(id);
+    @RequestMapping("/modules/{moduleId}/cours")
+    public List<Cours> getAllCours(@PathVariable Integer moduleId) {
+        return coursService.getAllCours(moduleId);
     }
 
-    // Retrieve a specific course of a given module
     @RequestMapping("/modules/{moduleId}/cours/{id}")
-    public Optional<Cours> getCours(@PathVariable Integer id){
-        return coursService.getCours(id);
+    public ResponseEntity<Cours> getCours(@PathVariable Integer id) {
+        Optional<Cours> cours = coursService.getCours(id);
+        if (cours.isPresent()) {
+            return ResponseEntity.ok(cours.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
-    // Add a course to a given module
-    @RequestMapping(method=RequestMethod.POST, value="/modules/{moduleId}/cours")
+    @RequestMapping(method = RequestMethod.POST, value = "/modules/{moduleId}/cours")
     public void ajouterCours(@RequestBody Cours cours, @PathVariable Integer moduleId) {
-        // Fetch the module from the database instead of creating a new one
-        Module module = moduleService.getModule(moduleId);
-        cours.setModule(module); // Set the fetched module to the course
+        cours.setModule(new Module(moduleId, "", ""));
         coursService.ajouterCours(cours);
     }
 
-    // Update a specific course of a given module
-    @RequestMapping(method=RequestMethod.PUT, value="/modules/{moduleId}/cours/{id}")
-    public void modifierCours(@RequestBody Cours cours, @PathVariable Integer moduleId,
-                              @PathVariable Integer id) {
-        // Fetch the module from the database instead of creating a new one
-        Module module = moduleService.getModule(moduleId);
-        cours.setModule(module); // Set the fetched module to the course
+    @RequestMapping(method = RequestMethod.PUT, value = "/modules/{moduleId}/cours/{id}")
+    public void modifierCours(@RequestBody Cours cours, @PathVariable Integer moduleId, @PathVariable Integer id) {
+        cours.setModule(new Module(moduleId, "", ""));
+        cours.setId(id); // Ensure the course id is set to the correct id
         coursService.modifierCours(cours);
     }
 
-    // Delete a specific course from a module
-    @RequestMapping(method=RequestMethod.DELETE, value="/modules/{moduleId}/cours/{id}")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/modules/{moduleId}/cours/{id}")
     public void supprimerCours(@PathVariable Integer id) {
         coursService.supprimerCours(id);
     }
