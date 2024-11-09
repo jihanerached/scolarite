@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     environment {
-        // Replace with your SonarCloud project and organization details
         SONAR_PROJECT_KEY = 'FadwaLacham_scolarite'
         SONAR_ORGANIZATION = 'fadwalacham'
         SONAR_TOKEN = credentials('sonarcloud-token')
@@ -17,22 +16,19 @@ pipeline {
 
         stage('Build') {
             steps {
-                script {
-                    // Ensure Maven is installed in Jenkins or adjust to use your specific Maven setup
-                    sh 'mvn clean install'
-                }
+                bat 'mvn clean install'
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarCloud') {
-                    sh """
-                    mvn sonar:sonar \
-                      -Dsonar.projectKey=$SONAR_PROJECT_KEY \
-                      -Dsonar.organization=$SONAR_ORGANIZATION \
-                      -Dsonar.host.url=https://sonarcloud.io \
-                      -Dsonar.login=$SONAR_TOKEN
+                    bat """
+                    mvn sonar:sonar ^
+                      -Dsonar.projectKey=%SONAR_PROJECT_KEY% ^
+                      -Dsonar.organization=%SONAR_ORGANIZATION% ^
+                      -Dsonar.host.url=https://sonarcloud.io ^
+                      -Dsonar.login=%SONAR_TOKEN%
                     """
                 }
             }
