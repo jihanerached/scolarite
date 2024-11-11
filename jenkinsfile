@@ -2,15 +2,15 @@ pipeline {
     agent any
 
     environment {
-        SONAR_PROJECT_KEY = 'FadwaLacham_scolarite'
-        SONAR_ORGANIZATION = 'fadwalacham'
-        SONAR_TOKEN = credentials('sonarcloud-token')
+        SONAR_PROJECT_KEY = 'jihanerached_scolarite'
+        SONAR_ORGANIZATION = 'jihanerached'
+        SONAR_TOKEN = credentials('sonar-token')
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/FadwaLacham/scolarite.git'
+                git url: 'https://github.com/jihanerached/scolarite.git'
             }
         }
 
